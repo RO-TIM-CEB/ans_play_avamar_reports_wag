@@ -1,0 +1,22 @@
+---
+# Main playbook to gather Avamar reports
+# Hosts are dynamically specified via the 'target' variable
+- hosts: '{{ target }}'
+  gather_facts: true
+  # Pre-tasks for initialization or setup
+  pre_tasks:
+    - name: Log start time
+      debug:
+        msg: "Playbook started at {{ ansible_date_time.iso8601 }}"
+  vars:
+    email_subject: "AVAMAR WAG Global Backup Report - {{ inventory_hostname }}"
+    email_to: "globalbackupreporting.it-solutions@atos.net, raul.alexandru@atos.net"
+
+  # Main role for Avamar reports
+  roles:
+    - role: ans_role_avamar_reports
+  # Post-tasks for cleanup or logging
+  post_tasks:
+    - name: Log end time
+      debug:
+        msg: "Playbook ended at {{ ansible_date_time.iso8601 }}"
